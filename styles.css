@@ -228,28 +228,28 @@ button:active,
 
 @media (max-width: 480px) {
   .actions-split {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 10px;
   }
 
   .actions-left,
   .actions-right {
-    width: 100%;
-    flex-wrap: wrap;
-    justify-content: center;
+    display: contents;
   }
 
   .actions-left button,
   .actions-right .file-label,
   .actions-right .btn-primary {
+    width: 100%;
     min-width: 0;
-    flex: 1 1 calc(50% - 8px);
     height: 38px;
     font-size: 0.9rem;
     padding: 10px 12px;
   }
 
   .actions-right .btn-primary {
-    flex-basis: 100%;
+    grid-column: 1 / -1;
   }
 }
 
