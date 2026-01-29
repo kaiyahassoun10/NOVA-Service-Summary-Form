@@ -271,6 +271,13 @@ textarea {
   outline: none;
 }
 
+input[type="date"] {
+  appearance: none;
+  -webkit-appearance: none;
+  min-inline-size: 0;
+  max-inline-size: 100%;
+}
+
 input[type="text"]:focus,
 input[type="date"]:focus,
 textarea:focus {
