@@ -181,6 +181,10 @@ button:active,
   gap: 12px;
 }
 
+.grid > .card {
+  min-width: 0;
+}
+
 @media (min-width: 720px) {
   .grid-2 {
     grid-template-columns: 1fr 1fr;
