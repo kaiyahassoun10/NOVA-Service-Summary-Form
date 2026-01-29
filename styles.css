@@ -623,6 +623,13 @@ textarea {
       max-width: 920px;
       margin: 0 auto;
     }
+
+    #printView .pv-photos-page {
+      min-height: auto;
+      padding-top: 0.35in;
+      padding-bottom: 0;
+      row-gap: 40px;
+    }
   }
 }
 
