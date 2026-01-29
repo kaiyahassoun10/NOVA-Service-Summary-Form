@@ -259,6 +259,9 @@ input[type="text"],
 input[type="date"],
 textarea {
   width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  display: block;
   padding: 10px 12px;
   border-radius: 12px;
   border: 1px solid var(--border);
