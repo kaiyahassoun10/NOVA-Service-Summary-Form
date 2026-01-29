@@ -633,6 +633,11 @@ textarea {
       page-break-after: auto;
     }
 
+    #printView .pv-photos-page:not(:last-child) {
+      break-after: auto !important;
+      page-break-after: auto !important;
+    }
+
     #printView .pv-photos-page + .pv-photos-page {
       break-before: page;
       page-break-before: always;
