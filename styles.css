@@ -592,8 +592,17 @@ textarea {
 }
 
 @media print {
+  @page {
+    margin: 0;
+  }
+
+  :root {
+    --print-footer-mask: 18mm;
+  }
+
   body {
     background: #fff;
+    margin: 0;
   }
 
   .container {
@@ -622,15 +631,28 @@ textarea {
     #printView .pv-wrap {
       max-width: 920px;
       margin: 0 auto;
+      padding-bottom: calc(16px + var(--print-footer-mask));
     }
 
     #printView .pv-photos-page {
       min-height: auto;
       padding-top: 0.35in;
-      padding-bottom: 0;
+      padding-bottom: calc(0.15in + var(--print-footer-mask));
       row-gap: 40px;
       break-after: auto;
       page-break-after: auto;
+    }
+
+    /* Mask iOS Safari's URL/footer overlay area */
+    body::after {
+      content: "";
+      position: fixed;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      height: var(--print-footer-mask);
+      background: #fff;
+      z-index: 9999;
     }
 
     #printView .pv-line {
