@@ -31,10 +31,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
   $("#clearBtn").addEventListener("click", clearReport);
 
-  $("#printBtn").addEventListener("click", () => {
-    buildPrintView();
-
-    window.print();
+  $("#printBtn").addEventListener("click", async () => {
+    await prepareAndPrint();
   });
 
   window.addEventListener("beforeprint", buildPrintView);
@@ -540,4 +538,29 @@ function buildPrintView() {
   if (pvPhotos.children.length > 0) {
     pvPhotos.classList.add("has-photos");
   }
+}
+
+async function prepareAndPrint() {
+  buildPrintView();
+  await waitForPrintImages();
+  window.print();
+}
+
+function waitForPrintImages() {
+  const images = Array.from(
+    document.querySelectorAll("#printView .pv-photo-img img"),
+  );
+
+  if (images.length === 0) return Promise.resolve();
+
+  return Promise.all(
+    images.map(
+      (img) =>
+        new Promise((resolve) => {
+          if (img.complete && img.naturalWidth > 0) return resolve();
+          img.addEventListener("load", resolve, { once: true });
+          img.addEventListener("error", resolve, { once: true });
+        }),
+    ),
+  );
 }
