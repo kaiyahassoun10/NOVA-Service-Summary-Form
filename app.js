@@ -10,7 +10,9 @@ const photoTpl = $("#photoTemplate");
 
 const MAX_PHOTOS_DEFAULT = 6;
 
-const MAX_DIMENSION = 1800; // downscale long side to reduce PDF size
+const MAX_DIMENSION = 1800; // downscale long side to reduce UI size
+const MAX_DIMENSION_PRINT = 3000; // higher-res for print/PDF
+const PRINT_JPEG_QUALITY = 0.92;
 
 // Init
 
@@ -100,10 +102,11 @@ async function loadFiles(fileList) {
 
     try {
       const normalized = await normalizeImageFile(file);
-      const dataUrl = await readAndMaybeDownscale(normalized);
+      const { previewUrl, printUrl } = await readImageVariants(normalized);
 
       lastAdded = addPhotoCard({
-        image: dataUrl,
+        image: previewUrl,
+        printImage: printUrl,
         caption: "",
         size: humanFileSize(normalized.size),
       });
@@ -186,13 +189,14 @@ function addPhotoCard(data) {
     if (!file) return;
 
     const normalized = await normalizeImageFile(file);
-    const url = await readAndMaybeDownscale(normalized);
+    const { previewUrl, printUrl } = await readImageVariants(normalized);
 
-    setPreview(preview, url);
+    setPreview(preview, previewUrl);
 
     sizeEl.textContent = humanFileSize(normalized.size);
 
-    el.dataset.image = url; // store
+    el.dataset.image = previewUrl; // store
+    el.dataset.printImage = printUrl;
   });
 
   removeBtn.addEventListener("click", () => {
@@ -208,6 +212,7 @@ function addPhotoCard(data) {
     if (data.size) sizeEl.textContent = data.size;
 
     el.dataset.image = data.image || "";
+    el.dataset.printImage = data.printImage || "";
   }
 
   photosEl.appendChild(node);
@@ -262,6 +267,43 @@ async function readAndMaybeDownscale(file) {
   // Use JPEG to compress; quality 0.85 is a good balance
 
   return canvas.toDataURL("image/jpeg", 0.85);
+}
+
+async function readImageVariants(file) {
+  const origUrl = await fileToDataURL(file);
+  const img = await createImage(origUrl);
+
+  const previewUrl = downscaleFromImage(
+    img,
+    origUrl,
+    MAX_DIMENSION,
+    0.85,
+  );
+  const printUrl = downscaleFromImage(
+    img,
+    origUrl,
+    MAX_DIMENSION_PRINT,
+    PRINT_JPEG_QUALITY,
+  );
+
+  return { previewUrl, printUrl };
+}
+
+function downscaleFromImage(img, origUrl, maxSide, quality) {
+  const { width, height } = fitWithin(img.width, img.height, maxSide);
+
+  if (width === img.width && height === img.height) return origUrl;
+
+  const canvas = document.createElement("canvas");
+
+  canvas.width = width;
+  canvas.height = height;
+
+  const ctx = canvas.getContext("2d");
+
+  ctx.drawImage(img, 0, 0, width, height);
+
+  return canvas.toDataURL("image/jpeg", quality);
 }
 
 function createImage(src) {
@@ -326,6 +368,7 @@ async function saveReport() {
 
     photos: $$(".card[data-photo]").map((card) => ({
       image: card.dataset.image || "",
+      printImage: card.dataset.printImage || "",
 
       caption: $("[data-caption]", card).value,
 
@@ -451,7 +494,7 @@ function buildPrintView() {
   let photoCount = 0;
 
   $$(".card[data-photo]").forEach((card) => {
-    const imgData = card.dataset.image || "";
+    const imgData = card.dataset.printImage || card.dataset.image || "";
 
     const caption = $("[data-caption]", card).value || "";
 
