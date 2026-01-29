@@ -191,6 +191,33 @@ button:active,
   .header img {
     height: 220px;
   }
+
+  .container {
+    margin: 16px auto;
+    padding: 14px;
+  }
+
+  .grid-2 {
+    grid-template-columns: 1fr;
+  }
+
+  .actions-left,
+  .actions-right {
+    width: 100%;
+  }
+
+  .actions-left button,
+  .actions-right .file-label,
+  .actions-right .btn-primary {
+    flex: 1 1 160px;
+    min-width: 140px;
+  }
+
+  input[type="text"],
+  input[type="date"],
+  textarea {
+    font-size: 16px;
+  }
 }
 
 @media (max-width: 600px) {
@@ -208,6 +235,13 @@ button:active,
     justify-content: center;
   }
 
+  button,
+  .btn,
+  .file-label {
+    height: 40px;
+    font-size: 0.9rem;
+  }
+
   .photo-card {
     grid-template-columns: 90px 1fr;
   }
@@ -219,6 +253,40 @@ button:active,
 
   .card {
     padding: 12px;
+  }
+
+  .container {
+    padding-left: calc(12px + env(safe-area-inset-left));
+    padding-right: calc(12px + env(safe-area-inset-right));
+  }
+}
+
+@media (max-width: 480px) {
+  .actions-left,
+  .actions-right {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .actions-left button,
+  .actions-right .file-label,
+  .actions-right .btn-primary {
+    width: 100%;
+  }
+
+  .photo-card {
+    grid-template-columns: 1fr;
+  }
+
+  .preview {
+    width: 100%;
+    height: auto;
+    aspect-ratio: 1 / 1;
+  }
+
+  .photo-actions {
+    flex-direction: column;
+    align-items: stretch;
   }
 }
 
