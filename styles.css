@@ -629,6 +629,13 @@ textarea {
       padding-top: 0.35in;
       padding-bottom: 0;
       row-gap: 40px;
+      break-after: auto;
+      page-break-after: auto;
+    }
+
+    #printView .pv-photos-page + .pv-photos-page {
+      break-before: page;
+      page-break-before: always;
     }
   }
 }
