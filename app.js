@@ -11,8 +11,8 @@ const photoTpl = $("#photoTemplate");
 const MAX_PHOTOS_DEFAULT = 6;
 
 const MAX_DIMENSION = 1800; // downscale long side to reduce UI size
-const MAX_DIMENSION_PRINT = 1800; // balanced quality for email-friendly PDFs
-const PRINT_JPEG_QUALITY = 0.8;
+const MAX_DIMENSION_PRINT = 1400; // stronger compression while keeping report readability
+const PRINT_JPEG_QUALITY = 0.7;
 
 // Init
 
