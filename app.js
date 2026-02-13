@@ -11,8 +11,8 @@ const photoTpl = $("#photoTemplate");
 const MAX_PHOTOS_DEFAULT = 6;
 
 const MAX_DIMENSION = 1800; // downscale long side to reduce UI size
-const MAX_DIMENSION_PRINT = 3000; // higher-res for print/PDF
-const PRINT_JPEG_QUALITY = 0.92;
+const MAX_DIMENSION_PRINT = 1800; // balanced quality for email-friendly PDFs
+const PRINT_JPEG_QUALITY = 0.8;
 
 // Init
 
@@ -282,15 +282,16 @@ async function readImageVariants(file) {
     origUrl,
     MAX_DIMENSION_PRINT,
     PRINT_JPEG_QUALITY,
+    true,
   );
 
   return { previewUrl, printUrl };
 }
 
-function downscaleFromImage(img, origUrl, maxSide, quality) {
+function downscaleFromImage(img, origUrl, maxSide, quality, forceJpeg = false) {
   const { width, height } = fitWithin(img.width, img.height, maxSide);
 
-  if (width === img.width && height === img.height) return origUrl;
+  if (width === img.width && height === img.height && !forceJpeg) return origUrl;
 
   const canvas = document.createElement("canvas");
 
